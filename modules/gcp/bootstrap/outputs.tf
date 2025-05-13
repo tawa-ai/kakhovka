@@ -14,22 +14,6 @@ output "terraform_state_bucket_self_link" {
   value       = google_storage_bucket.terraform_state.self_link
 }
 
-# Service account outputs
-output "terraform_service_account_email" {
-  description = "The email address of the Terraform service account"
-  value       = google_service_account.terraform.email
-}
-
-output "terraform_service_account_id" {
-  description = "The unique ID of the Terraform service account"
-  value       = google_service_account.terraform.id
-}
-
-output "terraform_service_account_name" {
-  description = "The fully-qualified name of the Terraform service account"
-  value       = google_service_account.terraform.name
-}
-
 # Configuration helper outputs
 output "backend_configuration" {
   description = "A backend configuration block for use in other Terraform configurations"

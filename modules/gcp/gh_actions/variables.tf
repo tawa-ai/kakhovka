@@ -8,17 +8,6 @@ variable "project_id" {
   }
 }
 
-variable "location" {
-  description = "The location (region or multi-region) for the bootstrap resources"
-  type        = string
-  default     = "us-central1"
-
-  validation {
-    condition     = can(regex("^(us|eu|asia|northamerica|southamerica|australia)(-\\w+)?$", var.location))
-    error_message = "Location must be a valid GCP region or multi-region."
-  }
-}
-
 variable "github_repo" {
   description = "The GitHub repository in the format 'owner/repo' that will be authorized to access GCP"
   type        = string
@@ -35,24 +24,17 @@ variable "github_branch_pattern" {
   default     = "refs/heads/main"
 }
 
-variable "terraform_state_bucket" {
-  description = "Name of the GCS bucket for storing Terraform state (defaults to '<project_id>-terraform-state')"
+variable "service_account_id" {
+  description = "ID for the service account."
   type        = string
-  default     = ""
-}
-
-variable "service_account_name" {
-  description = "Name of the Terraform service account to create"
-  type        = string
-  default     = "github-actions"
-
-  validation {
-    condition     = can(regex("^[a-zA-Z][a-zA-Z0-9_-]{2,28}[a-zA-Z0-9]$", var.service_account_name))
-    error_message = "Service account name must be between 4 and 30 characters and match the pattern [a-zA-Z][a-zA-Z0-9_-]{2,28}[a-zA-Z0-9]."
-  }
 }
 
 variable "workload_identity_pool_id" {
+  description = "Name of the identity pool to bind."
+  type        = string
+}
+
+variable "workload_identity_pool_name" {
   description = "ID for the Workload Identity Pool (defaults to 'github-pool')"
   type        = string
   default     = "github-pool"
@@ -63,13 +45,3 @@ variable "workload_identity_provider_id" {
   type        = string
   default     = "github-provider"
 }
-
-variable "labels" {
-  description = "A map of labels to apply to bootstrap resources"
-  type        = map(string)
-  default = {
-    managed-by = "terraform"
-    purpose    = "ci-cd"
-  }
-}
-
