@@ -50,7 +50,7 @@ output "provider_configuration" {
 # Template for terraform backend block
 output "backend_terraform_snippet" {
   description = "A terraform backend snippet to use in other Terraform configurations"
-  value = <<-EOT
+  value       = <<-EOT
   terraform {
     backend "gcs" {
       bucket = "${google_storage_bucket.terraform_state.name}"

@@ -11,10 +11,10 @@
 locals {
   # If terraform_state_bucket is provided, use it; otherwise, construct the name
   terraform_state_bucket = var.terraform_state_bucket != "" ? var.terraform_state_bucket : "${var.project_id}-terraform-state"
-  
+
   # Full service account email
   service_account_email = google_service_account.terraform.email
-  
+
   # Common labels to apply to all resources
   common_labels = merge(
     var.labels,
@@ -31,37 +31,37 @@ resource "google_storage_bucket" "terraform_state" {
   location      = var.location
   project       = var.project_id
   force_destroy = var.bucket_force_destroy
-  
+
   # Enable versioning to keep history of state files
   versioning {
     enabled = true
   }
-  
+
   # Enforce uniform bucket-level access
   uniform_bucket_level_access = var.uniform_bucket_level_access
-  
+
   # Lifecycle rules for managing old state versions
   lifecycle_rule {
     condition {
-      age = 30  # days
+      age = 30 # days
     }
     action {
       type = "AbortIncompleteMultipartUpload"
     }
   }
-  
+
   # Optional lifecycle rule to archive older versions
   lifecycle_rule {
     condition {
       num_newer_versions = 10
-      age                = 90  # days
+      age                = 90 # days
     }
     action {
-      type = "SetStorageClass"
+      type          = "SetStorageClass"
       storage_class = "COLDLINE"
     }
   }
-  
+
   labels = local.common_labels
 }
 
@@ -91,7 +91,7 @@ resource "google_project_iam_member" "terraform_permissions" {
     "roles/logging.admin",
     "roles/container.admin",
   ])
-  
+
   project = var.project_id
   role    = each.value
   member  = "serviceAccount:${google_service_account.terraform.email}"

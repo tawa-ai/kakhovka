@@ -67,7 +67,7 @@ variable "workload_identity_provider_id" {
 variable "labels" {
   description = "A map of labels to apply to bootstrap resources"
   type        = map(string)
-  default     = {
+  default = {
     managed-by = "terraform"
     purpose    = "ci-cd"
   }
