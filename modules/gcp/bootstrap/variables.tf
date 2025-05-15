@@ -25,15 +25,14 @@ variable "terraform_state_bucket" {
   default     = ""
 }
 
-variable "service_account_name" {
-  description = "Name of the Terraform service account to create"
+variable "service_account_email" {
+  description = "Email of the Terraform service account to use for main branch"
   type        = string
-  default     = "terraform"
+}
 
-  validation {
-    condition     = can(regex("^[a-zA-Z][a-zA-Z0-9_-]{2,28}[a-zA-Z0-9]$", var.service_account_name))
-    error_message = "Service account name must be between 4 and 30 characters and match the pattern [a-zA-Z][a-zA-Z0-9_-]{2,28}[a-zA-Z0-9]."
-  }
+variable "branch_service_account_email" {
+  description = "Email of the branch Terraform service account to use for all other branches"
+  type        = string
 }
 
 variable "labels" {

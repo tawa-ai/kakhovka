@@ -1,0 +1,48 @@
+name: Terraform Apply on Push to Main
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.tf'
+      - '**.tfvars'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: "tawa-ai"
+          workload_identity_provider:  "projects/60956311838/locations/global/workloadIdentityPools/tawa-ai-kakhovka-gha/providers/tawa-ai-kakhovka-gha"
+          service_account: 'tawa-ai-kakhovka@tawa-ai.iam.gserviceaccount.com'
+      
+      - name: Terraform Init, Plan, & Apply - Tawa Ai GCP
+        run: |
+          cd modules/service/gcp/tawa-ai
+          terraform init -no-color
+          terraform plan -no-color -out=tfplan
+          terraform apply -auto-approve 
